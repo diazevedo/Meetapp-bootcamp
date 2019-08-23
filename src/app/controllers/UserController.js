@@ -22,8 +22,29 @@ class UserController {
   }
 
   async update(req, res) {
-    const { name, email, password } = req.body;
-    res.json({ name, email, password });
+    const isDataValid = await UserValidator.update(req.body);
+    if (!isDataValid)
+      return res.status(401).json({ error: 'Sorry, incomplete data.' });
+
+    const { email, oldPassword } = req.body;
+    const user = await User.findByPk(req.userId);
+
+    if (user.email !== email) {
+      const userExists = await User.findOne({ where: { email } });
+
+      if (userExists) {
+        return res
+          .status(401)
+          .json({ error: 'The email is already registered.' });
+      }
+    }
+
+    if (oldPassword && !(await user.passwordCheck(oldPassword)))
+      return res.status(401).json({ error: 'Invalid password.' });
+
+    const { name } = await user.update(req.body);
+
+    return res.json({ name, email });
   }
 }
 
