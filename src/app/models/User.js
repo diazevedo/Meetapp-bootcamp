@@ -16,6 +16,10 @@ class User extends Model {
 
     return this;
   }
+
+  passwordCheck(password) {
+    return this.password_hash === password;
+  }
 }
 
 export default User;
