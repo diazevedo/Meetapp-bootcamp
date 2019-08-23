@@ -1,9 +1,15 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User';
+import SessionSchemaValidator from '../../helpers/SessionSchemaValidator';
 import authConfig from '../../config/auth';
 
 class SessionController {
   async storeToken(req, res) {
+    const isDataValid = await SessionSchemaValidator.createSession(req.body);
+
+    if (!isDataValid)
+      return res.status(400).json({ error: 'Sorry, validation has failed' });
+
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });
