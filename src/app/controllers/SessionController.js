@@ -9,7 +9,7 @@ class SessionController {
 
     if (!user) return res.status(401).json({ error: 'User not found.' });
 
-    if (!user.passwordCheck(password))
+    if (!(await user.passwordCheck(password)))
       return res.status(401).json({ error: 'Invalid Password.' });
 
     const token = SessionController.createToken(user.id);
