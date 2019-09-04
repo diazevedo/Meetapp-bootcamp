@@ -22,11 +22,17 @@ beforeAll(async () => {
 });
 
 describe('Test file upload route', () => {
-  test('it should return 200', async () => {
+  test('it should return 401, no token', async () => {
+    expect.assertions(1);
+    const response = await appTest.post('/files');
+    expect(response.statusCode).toEqual(401);
+  });
+
+  test('it should return 401 no file sent', async () => {
     expect.assertions(1);
     const response = await appTest
-      .post('/file')
+      .post('/files')
       .set('Authorization', auth.token);
-    expect(response.statusCode).toEqual(200);
+    expect(response.statusCode).toEqual(401);
   });
 });

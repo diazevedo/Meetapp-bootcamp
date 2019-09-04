@@ -16,6 +16,6 @@ routes.get('/users', (req, res) => {
 routes.post('/users', UserController.store);
 routes.post('/session', SessionController.storeToken);
 routes.put('/users', checkToken, UserController.update);
-routes.post('/file', checkToken, upload.single('file'), FileController.store);
+routes.post('/files', checkToken, upload.single('file'), FileController.store);
 
 export default routes;
