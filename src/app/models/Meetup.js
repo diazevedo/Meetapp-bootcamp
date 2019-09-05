@@ -1,4 +1,4 @@
-import Sequelize, { Model } from 'sequelize';
+import { Sequelize, Model } from 'sequelize';
 
 class Meetup extends Model {
   static init(sequelize) {
@@ -12,14 +12,16 @@ class Meetup extends Model {
         creator_id: Sequelize.INTEGER,
         image_id: Sequelize.INTEGER,
       },
-      { sequelize }
+      {
+        sequelize,
+      }
     );
     return this;
   }
 
   static associate(models) {
-    this.belongsTo(models.User, { foreignKey: 'id', as: 'creator_id' });
-    this.belongsTo(models.File, { foreignKey: 'id', as: 'image_id' });
+    this.belongsTo(models.User, { foreignKey: 'id', as: 'id_creator' });
+    this.belongsTo(models.File, { foreignKey: 'id', as: 'id_image' });
   }
 }
 
