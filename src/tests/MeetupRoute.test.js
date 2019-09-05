@@ -16,9 +16,16 @@ beforeAll(async () => {
 });
 
 describe('Basic routes tests', () => {
-  test('Test route exists, should return 404', async () => {
+  test('Test route exists -no token- should return 401', async () => {
     expect.assertions(1);
     const response = await app.post('/meetups');
-    expect(response.statusCode).toEqual(404);
+    expect(response.statusCode).toEqual(401);
+  });
+  test('it should return ok', async () => {
+    expect.assertions(1);
+    const response = await app
+      .post('/meetups')
+      .set('Authorization', auth.token);
+    expect(response.ok).toBeTruthy();
   });
 });
