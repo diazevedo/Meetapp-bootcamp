@@ -2,3 +2,4 @@ node_modules/
 notes.txt
 tmp/
 yarn-error.log
+.DS_Store
