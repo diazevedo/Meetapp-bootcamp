@@ -50,6 +50,28 @@ class MeetupController {
 
     return res.json(meetup);
   }
+
+  async delete(req, res) {
+    const { id } = req.params;
+    const meetup = await Meetup.findByPk(id);
+    if (!meetup)
+      return res.status(400).json({ error: 'Meetup was not found.' });
+
+    if (meetup.creator_id !== req.userId) {
+      return res
+        .status(403)
+        .json({ error: 'You are not allowed to cancel this meetup.' });
+    }
+
+    if (meetup.past)
+      return res
+        .status(401)
+        .json({ error: 'You cannot cancel this meetup once it has occured..' });
+
+    await meetup.destroy();
+
+    return res.json({ deleted: true });
+  }
 }
 
 export default new MeetupController();

@@ -35,4 +35,5 @@ routes.get(
 );
 
 routes.put('/meetups/:id', checkToken, userExists, MeetupController.update);
+routes.delete('/meetups/:id', checkToken, userExists, MeetupController.delete);
 export default routes;
