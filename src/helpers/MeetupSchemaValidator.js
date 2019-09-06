@@ -13,6 +13,19 @@ class MeetupValidator {
     const isValid = await schema.isValid(meetup);
     return isValid;
   }
+
+  async update(meetup) {
+    const schema = Yup.object().shape({
+      title: Yup.string(),
+      description: Yup.string(),
+      location: Yup.string(),
+      date: Yup.date(),
+      file_id: Yup.number(),
+    });
+
+    const isValid = await schema.isValid(meetup);
+    return isValid;
+  }
 }
 
 export default new MeetupValidator();

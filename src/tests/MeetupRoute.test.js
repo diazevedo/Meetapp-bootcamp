@@ -69,13 +69,4 @@ describe('Basic routes tests', () => {
       .send(meetup);
     expect(response.statusCode).toEqual(200);
   });
-
-  test('It should fail, update 200', async () => {
-    expect.assertions(1);
-    const response = await app
-      .put('/meetups')
-      .set('Authorization', auth.token)
-      .send(meetup);
-    expect(response.statusCode).toEqual(200);
-  });
 });
