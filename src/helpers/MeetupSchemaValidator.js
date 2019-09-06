@@ -8,7 +8,6 @@ class MeetupValidator {
       location: Yup.string().required(),
       date: Yup.date().required(),
       file_id: Yup.number().required(),
-      creator_id: Yup.number().required(),
     });
 
     const isValid = await schema.isValid(meetup);

@@ -4,10 +4,10 @@ import MeetupSchemaValidator from '../../helpers/MeetupSchemaValidator';
 
 class MeetupController {
   async store(req, res) {
-    if (!MeetupSchemaValidator.store(req.body))
-      return res.status(401).json({ error: 'Invalid data.' });
+    if (!(await MeetupSchemaValidator.store(req.body)))
+      return res.status(401).json({ error: 'Invalid data sent.' });
 
-    if (DateCheck.isDateBeforeISO(req.body.date))
+    if (await DateCheck.isDateBeforeISO(req.body.date))
       return res.status(400).json({ error: 'Invalid date.' });
 
     const meetupCreated = await Meetup.create({
@@ -15,7 +15,12 @@ class MeetupController {
       creator_id: req.userId,
     });
 
-    return res.json(meetupCreated);
+    return res.json({
+      id: meetupCreated.id,
+      title: meetupCreated.title,
+      description: meetupCreated.description,
+      location: meetupCreated.location,
+    });
   }
 
   async update(req, res) {
