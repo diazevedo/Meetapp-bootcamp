@@ -2,7 +2,7 @@ import request from 'supertest';
 import server from '../app';
 import createUser from './CreateUser';
 import createAuth from './Auth';
-import user from './userData';
+import userData from './userData';
 
 const app = request(server);
 
@@ -17,11 +17,16 @@ const meetup = {
 };
 
 beforeAll(async () => {
-  const userSaved = await createUser(app, user.name, user.email, user.password);
+  const user = await createUser(
+    app,
+    userData.name,
+    userData.email,
+    userData.password
+  );
 
-  if (!userSaved.id) meetup.creator_id = 12;
+  meetup.creator_id = user.id;
 
-  auth.token = await createAuth(app, user.email, user.password);
+  auth.token = await createAuth(app, userData.email, userData.password);
 });
 
 describe('Update meetups', () => {
@@ -60,8 +65,12 @@ describe('Update meetups', () => {
   test('It should return You are not allowed to cancel this meetup.', async () => {
     expect.assertions(1);
 
-    await createUser(app, user.name, 'jestmod@jest.com', user.password);
-    const tokenDiff = await createAuth(app, 'jestmod@jest.com', user.password);
+    await createUser(app, userData.name, 'jestmod@jest.com', userData.password);
+    const tokenDiff = await createAuth(
+      app,
+      'jestmod@jest.com',
+      userData.password
+    );
 
     const response = await app
       .put('/meetups/49')
@@ -82,4 +91,8 @@ describe('Update meetups', () => {
       .send(meetupPastDate);
     expect(response.statusCode).toEqual(200);
   });
+});
+
+afterAll(async () => {
+  user.destroy();
 });

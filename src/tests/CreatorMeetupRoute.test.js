@@ -2,17 +2,22 @@ import request from 'supertest';
 import server from '../app';
 import createUser from './CreateUser';
 import createAuth from './Auth';
-import user from './userData';
+import User from '../app/models/User';
+import userData from './userData';
 
 const app = request(server);
 
 const auth = {};
 
 beforeAll(async () => {
-  const userSaved = await createUser(app, user.name, user.email, user.password);
-  user.id = userSaved.id;
-
-  auth.token = await createAuth(app, user.email, user.password);
+  const user = await createUser(
+    app,
+    userData.name,
+    userData.email,
+    userData.password
+  );
+  userData.id = user.id;
+  auth.token = await createAuth(app, userData.email, userData.password);
 });
 
 describe('Test route exists,', () => {
@@ -29,4 +34,8 @@ describe('Test route exists,', () => {
       .set('Authorization', auth.token);
     expect(response.statusCode).toEqual(200);
   });
+});
+
+afterAll(() => {
+  User.destroy({ where: { id: userData.id } });
 });

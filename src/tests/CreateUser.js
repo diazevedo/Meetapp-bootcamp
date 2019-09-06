@@ -1,11 +1,11 @@
 const createUser = async (app, name, email, password) => {
-  const user = await app.post('/users').send({
+  const response = await app.post('/users').send({
     name,
     email,
     password,
   });
 
-  return user;
+  return response.body;
 };
 
 export default createUser;
