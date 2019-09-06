@@ -34,4 +34,5 @@ routes.get(
   MeetupCreatorController.index
 );
 
+routes.put('/meetups/', checkToken, userExists, MeetupController.update);
 export default routes;
