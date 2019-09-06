@@ -3,7 +3,9 @@ import multer from 'multer';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import MeetupController from './app/controllers/MeetupController';
+import MeetupCreatorController from './app/controllers/MeetupCreatorController';
 import checkToken from './app/middlewares/jwt';
+import userExists from './app/middlewares/userExists';
 import FileController from './app/controllers/FileController';
 import multerConfigs from './config/multer';
 
@@ -16,8 +18,20 @@ routes.get('/users', (req, res) => {
 
 routes.post('/users', UserController.store);
 routes.post('/session', SessionController.storeToken);
-routes.put('/users', checkToken, UserController.update);
-routes.post('/files', checkToken, upload.single('file'), FileController.store);
-routes.post('/meetups', checkToken, MeetupController.store);
+routes.put('/users', checkToken, userExists, UserController.update);
+routes.post(
+  '/files',
+  checkToken,
+  userExists,
+  upload.single('file'),
+  FileController.store
+);
+routes.post('/meetups', checkToken, userExists, MeetupController.store);
+routes.get(
+  '/creations/',
+  checkToken,
+  userExists,
+  MeetupCreatorController.index
+);
 
 export default routes;

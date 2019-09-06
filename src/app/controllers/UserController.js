@@ -35,7 +35,7 @@ class UserController {
       if (userExists) {
         return res
           .status(401)
-          .json({ error: 'The email is already registered.' });
+          .json({ error: 'This email is already registered.' });
       }
     }
 

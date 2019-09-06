@@ -2,10 +2,9 @@ import File from '../models/File';
 
 class FileController {
   async store(req, res) {
-    const { file = null } = req;
+    if (!req.file) return res.status(401).json({ error: 'File was not sent.' });
 
-    if (!file) return res.status(401).json({ error: 'File was not sent.' });
-
+    const { file } = req;
     file.name = req.file.originalname;
     file.path = req.file.filename;
 

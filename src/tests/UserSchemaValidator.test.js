@@ -1,55 +1,38 @@
 import UserSchemaValidator from '../helpers/UserSchemaValidator';
+import user from './userData';
 
-test('Test all required data sent', async () => {
-  const user = {
-    name: 'Diego',
-    email: 'diego@email.com',
-    password: '123456',
-  };
+describe('User creation tests', () => {
+  test('Test all required data sent', async () => {
+    const validation = await UserSchemaValidator.store(user);
+    expect(validation).toBeTruthy();
+  });
 
-  const validation = await UserSchemaValidator.store(user);
-  expect(validation).toBeTruthy();
-});
+  test('Test empty name', async () => {
+    const userNoName = { ...user };
+    delete userNoName.name;
+    const validation = await UserSchemaValidator.store(userNoName);
+    expect(validation).toBeFalsy();
+  });
 
-test('Test empty name', async () => {
-  const user = {
-    email: 'diego@email.com',
-    password: '123456',
-  };
+  test('Test email without email', async () => {
+    const userNoEmail = { ...user };
+    delete userNoEmail.email;
+    const validation = await UserSchemaValidator.store(userNoEmail);
+    expect(validation).toBeFalsy();
+  });
 
-  const validation = await UserSchemaValidator.store(user);
-  expect(validation).toBeFalsy();
-});
+  test('Test email without @ symbol', async () => {
+    const userNoAt = { ...user };
+    userNoAt.email = 'diegojest.com';
+    const validation = await UserSchemaValidator.store(userNoAt);
+    expect(validation).toBeFalsy();
+  });
 
-test('Test email without @', async () => {
-  const user = {
-    name: 'Diego',
-    email: 'diegoemail.com',
-    password: '123456',
-  };
+  test('Test no password', async () => {
+    const userEmpyPassword = { ...user };
+    userEmpyPassword.password = '';
 
-  const validation = await UserSchemaValidator.store(user);
-  expect(validation).toBeFalsy();
-});
-
-test('Test email without @', async () => {
-  const user = {
-    name: 'Diego',
-    email: 'diegoemail.com',
-    password: '123456',
-  };
-
-  const validation = await UserSchemaValidator.store(user);
-  expect(validation).toBeFalsy();
-});
-
-test('Test no password', async () => {
-  const user = {
-    name: 'Diego',
-    email: 'diegoemail.com',
-    password: '',
-  };
-
-  const validation = await UserSchemaValidator.store(user);
-  expect(validation).toBeFalsy();
+    const validation = await UserSchemaValidator.store(userEmpyPassword);
+    expect(validation).toBeFalsy();
+  });
 });
