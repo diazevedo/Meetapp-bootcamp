@@ -14,8 +14,6 @@ class MeetupValidator {
     const isValid = await schema.isValid(meetup);
     return isValid;
   }
-
-  async isPastDate(meetup) {}
 }
 
 export default new MeetupValidator();

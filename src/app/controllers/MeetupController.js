@@ -1,4 +1,3 @@
-// import { Op } from 'sequelize';
 import Meetup from '../models/Meetup';
 import User from '../models/User';
 import DateCheck from '../../helpers/DateValidator';
@@ -14,7 +13,7 @@ class MeetupController {
     if (!MeetupSchemaValidator.store(req.body))
       return res.status(401).json({ error: 'Invalid data.' });
 
-    if (!DateCheck.isDateBeforeISO(req.body.date))
+    if (DateCheck.isDateBeforeISO(req.body.date))
       return res.status(400).json({ error: 'Invalid date.' });
 
     const meetupCreated = await Meetup.create({
@@ -23,6 +22,10 @@ class MeetupController {
     });
 
     return res.json(meetupCreated);
+  }
+
+  async update(req, res) {
+    return res.json({ ok: true });
   }
 }
 
