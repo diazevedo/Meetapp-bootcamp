@@ -23,12 +23,15 @@ beforeAll(async () => {
 describe('Basics Tests,', () => {
   test('It should return 401, no token', async () => {
     expect.assertions(1);
+
     const response = await app.get('/creations');
+
     expect(response.statusCode).toEqual(401);
   });
 
   test('It should return 200, with token', async () => {
     expect.assertions(1);
+
     const response = await app
       .get('/creations')
       .set('Authorization', auth.token);
@@ -38,4 +41,5 @@ describe('Basics Tests,', () => {
 
 afterAll(async () => {
   await User.destroy({ where: { id: userData.id } });
+  return true;
 });

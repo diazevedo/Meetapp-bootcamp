@@ -93,6 +93,6 @@ describe('Update meetups', () => {
   });
 });
 
-afterAll(async () => {
-  user.destroy();
-});
+// afterAll(async () => {
+//   user.destroy();
+// });
