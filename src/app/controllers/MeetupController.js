@@ -30,16 +30,25 @@ class MeetupController {
     if (!meetup)
       return res.status(401).json({ error: 'Meetup was not found.' });
 
+    if (meetup.creator_id !== req.userId) {
+      return res
+        .status(401)
+        .json({ error: 'You are not allowed to cancel this meetup.' });
+    }
+
     if (meetup.past)
       return res.status(401).json({ error: 'You cannot modify past meetups.' });
 
     if (!(await MeetupSchemaValidator.update(req.body)))
       return res.status(401).json({ error: 'Invalid data sent.' });
 
-    // if (await DateCheck.isDateBeforeISO(req.body.date))
-    //   return res.status(400).json({ error: 'Invalid date.' });
+    if (req.body.date && (await DateCheck.isDateBeforeISO(req.body.date))) {
+      return res.status(401).json({ error: 'A past date cannot be set.' });
+    }
 
-    return res.json({ ok: true });
+    await meetup.update(req.body);
+
+    return res.json(meetup);
   }
 }
 
