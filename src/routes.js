@@ -3,7 +3,7 @@ import multer from 'multer';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import MeetupController from './app/controllers/MeetupController';
-import MeetupCreatorController from './app/controllers/MeetupCreatorController';
+import CreatorMeetupController from './app/controllers/CreatorMeetupController';
 import checkToken from './app/middlewares/jwt';
 import userExists from './app/middlewares/userExists';
 import FileController from './app/controllers/FileController';
@@ -31,7 +31,7 @@ routes.get(
   '/creations/',
   checkToken,
   userExists,
-  MeetupCreatorController.index
+  CreatorMeetupController.index
 );
 
 routes.put('/meetups/:id', checkToken, userExists, MeetupController.update);

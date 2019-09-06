@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "test": "jest --watchAll",
-    "test-one": "jest --watch ./src/tests/CreatorMeetupRoute.test.js"
+    "test-one": "jest --watch ./src/tests/FileUpload.test.js"
   },
   "jest": {
     "transform": {
