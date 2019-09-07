@@ -2,6 +2,7 @@ import Subscription from '../models/Subscription';
 import Meetup from '../models/Meetup';
 import User from '../models/User';
 import Notification from '../schemas/Notification';
+import Mail from '../../lib/Mail';
 
 class SubscriptionController {
   async store(req, res) {
@@ -59,14 +60,18 @@ class SubscriptionController {
       });
     }
 
-    const subscription = await Subscription.create({ meetup_id, user_id });
+    // const subscription = await Subscription.create({ meetup_id, user_id });
     const userGuest = await User.findByPk(user_id);
     await Notification.create({
-      content: `Hi, ${meetup.User.name},  ${userGuest.name} is going to your ${meetup.title}`,
+      content: `Hi, ${meetup.User.name},  ${userGuest.name} is going to your meetup ${meetup.title}`,
       user: meetup.User.id,
     });
-
-    return res.json(subscription);
+    await Mail.senMail({
+      to: meetup.User.email,
+      subject: `New guest to your Meetup ${meetup.title}`,
+      text: `Hi, ${meetup.User.name},  ${userGuest.name} is going to your meetup ${meetup.title}`,
+    });
+    return res.json({});
   }
 }
 
