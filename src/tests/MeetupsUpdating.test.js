@@ -2,31 +2,22 @@ import request from 'supertest';
 import server from '../app';
 import createUser from './CreateUser';
 import createAuth from './Auth';
+import createFile from './CreateFile';
 import userData from './userData';
+import meetup from './meetupData';
 
 const app = request(server);
 
 const auth = {};
 
-const meetup = {
-  title: 'JEST w',
-  description: 'JEST meetup testing.',
-  date: '2019-10-10T15:00:00+10:00',
-  location: 'Sydney - NSW - Australia',
-  file_id: 16,
-};
-
 beforeAll(async () => {
-  const user = await createUser(
-    app,
-    userData.name,
-    userData.email,
-    userData.password
-  );
+  const user = await createUser();
+  meetup.user_id = user.id;
 
-  meetup.creator_id = user.id;
+  auth.token = await createAuth();
 
-  auth.token = await createAuth(app, userData.email, userData.password);
+  const res = await createFile(auth.token);
+  meetup.file_id = res.body.id;
 });
 
 describe('Update meetups', () => {

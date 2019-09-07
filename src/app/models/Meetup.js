@@ -9,7 +9,7 @@ class Meetup extends Model {
         description: Sequelize.STRING,
         date: Sequelize.DATE,
         location: Sequelize.STRING,
-        creator_id: Sequelize.INTEGER,
+        user_id: Sequelize.INTEGER,
         file_id: Sequelize.INTEGER,
         past: {
           type: Sequelize.VIRTUAL,
@@ -27,7 +27,7 @@ class Meetup extends Model {
 
   static associate(models) {
     this.hasMany(models.Subscription, { foreignKey: 'meetup_id' });
-    this.belongsTo(models.User, { foreignKey: 'creator_id', as: 'creator' });
+    this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
     this.belongsTo(models.File, { foreignKey: 'file_id', as: 'file' });
   }
 }

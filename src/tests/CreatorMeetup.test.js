@@ -10,14 +10,9 @@ const app = request(server);
 const auth = {};
 
 beforeAll(async () => {
-  const user = await createUser(
-    app,
-    userData.name,
-    userData.email,
-    userData.password
-  );
+  const user = await createUser();
   userData.id = user.id;
-  auth.token = await createAuth(app, userData.email, userData.password);
+  auth.token = await createAuth();
 });
 
 describe('Basics Tests,', () => {

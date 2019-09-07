@@ -12,7 +12,7 @@ class MeetupController {
 
     const meetupCreated = await Meetup.create({
       ...req.body,
-      creator_id: req.userId,
+      user_id: req.userId,
     });
 
     return res.json({
@@ -30,7 +30,7 @@ class MeetupController {
     if (!meetup)
       return res.status(401).json({ error: 'Meetup was not found.' });
 
-    if (meetup.creator_id !== req.userId) {
+    if (meetup.user_id !== req.userId) {
       return res
         .status(401)
         .json({ error: 'You are not allowed to cancel this meetup.' });
@@ -57,7 +57,7 @@ class MeetupController {
     if (!meetup)
       return res.status(400).json({ error: 'Meetup was not found.' });
 
-    if (meetup.creator_id !== req.userId) {
+    if (meetup.user_id !== req.userId) {
       return res
         .status(403)
         .json({ error: 'You are not allowed to cancel this meetup.' });

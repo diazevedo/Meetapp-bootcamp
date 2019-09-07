@@ -2,71 +2,66 @@ import request from 'supertest';
 import server from '../app';
 import createUser from './CreateUser';
 import createAuth from './Auth';
-import user from './userData';
+import createFile from './CreateFile';
+import createMeetup from './CreateMeetup';
+import User from '../app/models/User';
+import File from '../app/models/File';
+import MeetupModel from '../app/models/Meetup';
+
+import meetup from './meetupData';
 
 const app = request(server);
 
 const auth = {};
-
-const meetup = {
-  title: 'JEST w',
-  description: 'JEST meetup testing.',
-  date: '2019-10-10T15:00:00+10:00',
-  location: 'Sydney - NSW - Australia',
-  file_id: 15,
-};
+const deleteData = {};
 
 beforeAll(async () => {
-  const userSaved = await createUser(app, user.name, user.email, user.password);
+  const user = await createUser();
+  deleteData.user_id = user.id;
 
-  if (!userSaved.id) meetup.creator_id = 12;
+  auth.token = await createAuth();
 
-  auth.token = await createAuth(app, user.email, user.password);
+  const response = await createFile(auth.token);
+
+  deleteData.file_id = response.body.id;
+  meetup.file_id = response.body.id;
 });
 
 describe('Basic routes tests', () => {
+  expect.assertions(1);
+
   test('Test route exists, no token- should return 401', async () => {
-    expect.assertions(1);
     const response = await app.post('/meetups');
     expect(response.statusCode).toEqual(401);
   });
 
   test('It should return 400, past date - invalid date', async () => {
-    expect.assertions(1);
     const meetupNoDate = { ...meetup };
     meetupNoDate.date = '2019-08-10T15:00:00+10:00';
 
-    const response = await app
-      .post('/meetups')
-      .set('Authorization', auth.token)
-      .send(meetupNoDate);
-
-    const res = JSON.parse(response.text);
-    expect(res.error).toEqual('Invalid date.');
+    const response = await createMeetup(meetupNoDate, auth.token);
+    expect(response.error).toEqual('Invalid date.');
   });
 
   test('It should return 401, no title', async () => {
-    expect.assertions(1);
-
     const meetupNoTitle = { ...meetup };
     delete meetupNoTitle.title;
 
-    const response = await app
-      .post('/meetups')
-      .set('Authorization', auth.token)
-      .send(meetupNoTitle);
+    const response = await createMeetup(meetupNoTitle, auth.token);
 
-    const res = JSON.parse(response.text);
-    expect(res.error).toEqual('Invalid data sent.');
+    expect(response.body.error).toEqual('Invalid data sent.');
   });
 
   test('It should return 200 - all data sent', async () => {
-    expect.assertions(1);
+    const response = await createMeetup(meetup, auth.token);
 
-    const response = await app
-      .post('/meetups')
-      .set('Authorization', auth.token)
-      .send(meetup);
+    deleteData.meetup_id = response.body.id;
     expect(response.statusCode).toEqual(200);
+  });
+
+  afterAll(async () => {
+    await MeetupModel.destroy({ where: { id: deleteData.meetup_id } });
+    await User.destroy({ where: { id: deleteData.user_id } });
+    await File.destroy({ where: { id: deleteData.file_id } });
   });
 });

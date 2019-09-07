@@ -7,6 +7,7 @@ import CreatorMeetupController from './app/controllers/CreatorMeetupController';
 import checkToken from './app/middlewares/jwt';
 import userExists from './app/middlewares/userExists';
 import FileController from './app/controllers/FileController';
+import SubscriptionController from './app/controllers/SubscriptionController';
 import multerConfigs from './config/multer';
 
 const routes = new Router();
@@ -36,4 +37,10 @@ routes.get(
 
 routes.put('/meetups/:id', checkToken, userExists, MeetupController.update);
 routes.delete('/meetups/:id', checkToken, userExists, MeetupController.delete);
+routes.post(
+  '/subscriptions/:meetup_id',
+  checkToken,
+  userExists,
+  SubscriptionController.store
+);
 export default routes;

@@ -6,7 +6,7 @@ class MeetupCreatorController {
   async index(req, res) {
     const meetups = await Meetup.findAll({
       where: {
-        creator_id: req.userId,
+        user_id: req.userId,
       },
       attributes: ['id', 'description', 'date', 'location'],
       order: ['date'],
@@ -18,7 +18,7 @@ class MeetupCreatorController {
         },
         {
           model: User,
-          as: 'creator',
+          as: 'user',
           attributes: ['id', 'name'],
         },
       ],

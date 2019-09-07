@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "test": "jest --watchAll",
-    "test-one": "jest --watch ./src/tests/MeetupRoute.test.js"
+    "test-one": "jest --watch ./src/tests/Subscription.test.js"
   },
   "jest": {
     "transform": {
@@ -24,7 +24,8 @@
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",
     "sequelize": "^5.15.2",
-    "yup": "^0.27.0"
+    "yup": "^0.27.0",
+    "supertest": "^4.0.2"
   },
   "devDependencies": {
     "@sucrase/jest-plugin": "^2.0.0",
