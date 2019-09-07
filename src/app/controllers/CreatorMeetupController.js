@@ -13,12 +13,10 @@ class MeetupCreatorController {
       include: [
         {
           model: File,
-          as: 'file',
           attributes: ['id', 'path', 'url'],
         },
         {
           model: User,
-          as: 'user',
           attributes: ['id', 'name'],
         },
       ],
