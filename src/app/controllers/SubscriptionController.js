@@ -91,7 +91,9 @@ class SubscriptionController {
 
     await Queue.add(SubscriptionMail.key, { meetup, userGuest });
 
-    return res.json({});
+    return res.json({
+      id: subscription.id,
+    });
   }
 }
 
