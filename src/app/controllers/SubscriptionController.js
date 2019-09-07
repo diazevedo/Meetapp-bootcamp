@@ -60,18 +60,26 @@ class SubscriptionController {
       });
     }
 
-    // const subscription = await Subscription.create({ meetup_id, user_id });
+    const subscription = await Subscription.create({ meetup_id, user_id });
     const userGuest = await User.findByPk(user_id);
+
     await Notification.create({
       content: `Hi, ${meetup.User.name},  ${userGuest.name} is going to your meetup ${meetup.title}`,
       user: meetup.User.id,
     });
+
     await Mail.senMail({
       to: meetup.User.email,
       subject: `New guest to your Meetup ${meetup.title}`,
-      text: `Hi, ${meetup.User.name},  ${userGuest.name} is going to your meetup ${meetup.title}`,
+      template: 'subscription',
+      context: {
+        organiser: meetup.User.name,
+        guest: userGuest.name,
+        meetup: meetup.title,
+      },
     });
-    return res.json({});
+
+    return res.json(subscription);
   }
 }
 
