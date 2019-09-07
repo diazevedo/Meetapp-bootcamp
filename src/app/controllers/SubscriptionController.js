@@ -1,12 +1,18 @@
 import Subscription from '../models/Subscription';
 import Meetup from '../models/Meetup';
 import User from '../models/User';
+import Notification from '../schemas/Notification';
 
 class SubscriptionController {
   async store(req, res) {
     const { meetup_id = 0 } = req.params;
     const user_id = req.userId;
-    const meetup = await Meetup.findByPk(meetup_id, { include: [User] });
+    const meetup = await Meetup.findByPk(meetup_id, {
+      include: {
+        model: User,
+        attributes: ['id', 'name', 'email'],
+      },
+    });
 
     if (!meetup)
       return res.status(401).json({ error: 'Meetup was not found.' });
@@ -54,6 +60,11 @@ class SubscriptionController {
     }
 
     const subscription = await Subscription.create({ meetup_id, user_id });
+    const userGuest = await User.findByPk(user_id);
+    await Notification.create({
+      content: `Hi, ${meetup.User.name},  ${userGuest.name} is going to your ${meetup.title}`,
+      user: meetup.User.id,
+    });
 
     return res.json(subscription);
   }
