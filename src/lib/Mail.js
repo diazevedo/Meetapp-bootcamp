@@ -33,7 +33,7 @@ class Mail {
     );
   }
 
-  senMail(message) {
+  sendMail(message) {
     return this.transporter.sendMail({
       ...mailConfig.default,
       ...message,

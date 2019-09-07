@@ -68,7 +68,7 @@ class SubscriptionController {
       user: meetup.User.id,
     });
 
-    await Mail.senMail({
+    await Mail.sendMail({
       to: meetup.User.email,
       subject: `New guest to your Meetup ${meetup.title}`,
       template: 'subscription',
