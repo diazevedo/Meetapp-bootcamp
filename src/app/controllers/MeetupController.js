@@ -1,8 +1,40 @@
+import { startOfDay, endOfDay, parseISO } from 'date-fns';
+import { Op } from 'sequelize';
+
 import Meetup from '../models/Meetup';
 import DateCheck from '../../helpers/DateValidator';
 import MeetupSchemaValidator from '../../helpers/MeetupSchemaValidator';
+import User from '../models/User';
 
 class MeetupController {
+  async index(req, res) {
+    const { page = 1 } = req.query;
+    const where = {};
+
+    if (req.query.date) {
+      const searchDate = parseISO(req.query.date);
+
+      where.date = {
+        [Op.between]: [startOfDay(searchDate), endOfDay(searchDate)],
+      };
+    }
+
+    const meetups = await Meetup.findAll({
+      where,
+      limit: 10,
+      offset: (page - 1) * 10,
+      order: ['date'],
+      include: [
+        {
+          model: User,
+          attributes: ['name', 'email'],
+        },
+      ],
+    });
+
+    return res.json(meetups);
+  }
+
   async store(req, res) {
     if (!(await MeetupSchemaValidator.store(req.body)))
       return res.status(401).json({ error: 'Invalid data sent.' });

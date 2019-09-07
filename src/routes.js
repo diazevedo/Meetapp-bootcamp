@@ -28,6 +28,8 @@ routes.post(
   FileController.store
 );
 routes.post('/meetups', checkToken, userExists, MeetupController.store);
+routes.get('/meetups', checkToken, userExists, MeetupController.index);
+
 routes.get(
   '/creations/',
   checkToken,
