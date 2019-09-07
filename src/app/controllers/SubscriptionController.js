@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import Subscription from '../models/Subscription';
 import Meetup from '../models/Meetup';
 import User from '../models/User';
@@ -5,6 +6,25 @@ import Notification from '../schemas/Notification';
 import Mail from '../../lib/Mail';
 
 class SubscriptionController {
+  async index(req, res) {
+    const id = req.userId;
+
+    const subscriptions = await Subscription.findAll({
+      where: { user_id: id },
+      include: [
+        {
+          model: Meetup,
+          attributes: ['title', 'description', 'date', 'location'],
+          where: { date: { [Op.gt]: new Date() } },
+        },
+      ],
+      attributes: ['id'],
+      order: [[Meetup, 'date']],
+    });
+
+    return res.json(subscriptions);
+  }
+
   async store(req, res) {
     const { meetup_id = 0 } = req.params;
     const user_id = req.userId;

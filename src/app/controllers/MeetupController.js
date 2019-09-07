@@ -42,9 +42,11 @@ class MeetupController {
     if (await DateCheck.isDateBeforeISO(req.body.date))
       return res.status(400).json({ error: 'Invalid date.' });
 
+    const user_id = req.userId;
+
     const meetupCreated = await Meetup.create({
       ...req.body,
-      user_id: req.userId,
+      user_id,
     });
 
     return res.json({

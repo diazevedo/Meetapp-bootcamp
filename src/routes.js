@@ -45,4 +45,11 @@ routes.post(
   userExists,
   SubscriptionController.store
 );
+routes.get(
+  '/subscriptions',
+  checkToken,
+  userExists,
+  SubscriptionController.index
+);
+
 export default routes;

@@ -4,9 +4,10 @@ import Meetup from '../models/Meetup';
 
 class MeetupCreatorController {
   async index(req, res) {
+    const user_id = req.userId;
     const meetups = await Meetup.findAll({
       where: {
-        user_id: req.userId,
+        user_id,
       },
       attributes: ['id', 'description', 'date', 'location'],
       order: ['date'],
