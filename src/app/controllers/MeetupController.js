@@ -82,7 +82,13 @@ class MeetupController {
 
     await meetup.update(req.body);
 
-    return res.json(meetup);
+    return res.json({
+      id: meetup.id,
+      title: meetup.title,
+      description: meetup.description,
+      date: meetup.date,
+      location: meetup.location,
+    });
   }
 
   async delete(req, res) {

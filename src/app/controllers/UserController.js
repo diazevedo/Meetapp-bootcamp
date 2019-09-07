@@ -26,9 +26,8 @@ class UserController {
     if (!isDataValid)
       return res.status(401).json({ error: 'Sorry, incomplete data.' });
 
-    const { email, oldPassword } = req.body;
     const user = await User.findByPk(req.userId);
-
+    const { email = user.email, oldPassword = null } = req.body;
     if (user.email !== email) {
       const userExists = await User.findOne({ where: { email } });
 
