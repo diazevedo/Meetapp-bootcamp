@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "test": "jest --watchAll",
-    "test-one": "jest --watch ./src/tests/Subscription.test.js"
+    "test-one": "jest --watch ./src/tests/Subscription.test.js",
+    "queue": "nodemon src/queue.js"
   },
   "jest": {
     "transform": {
@@ -17,6 +18,7 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "bee-queue": "^1.2.2",
     "date-fns": "^2.0.0-beta.5",
     "express": "^4.17.1",
     "express-handlebars": "^3.1.0",

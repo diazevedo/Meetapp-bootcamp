@@ -3,7 +3,8 @@ import Subscription from '../models/Subscription';
 import Meetup from '../models/Meetup';
 import User from '../models/User';
 import Notification from '../schemas/Notification';
-import Mail from '../../lib/Mail';
+import SubscriptionMail from '../jobs/SubscriptionMail';
+import Queue from '../../lib/Queue';
 
 class SubscriptionController {
   async index(req, res) {
@@ -88,18 +89,9 @@ class SubscriptionController {
       user: meetup.User.id,
     });
 
-    await Mail.sendMail({
-      to: meetup.User.email,
-      subject: `New guest to your Meetup ${meetup.title}`,
-      template: 'subscription',
-      context: {
-        organiser: meetup.User.name,
-        guest: userGuest.name,
-        meetup: meetup.title,
-      },
-    });
+    await Queue.add(SubscriptionMail.key, { meetup, userGuest });
 
-    return res.json(subscription);
+    return res.json({});
   }
 }
 
